@@ -1,6 +1,8 @@
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { Check, Clock3, Info } from 'lucide-react'
 import { Brand } from './Brand'
+import { Grain } from './Grain'
 import { WhatsAppButton } from './WhatsAppButton'
 import { buildWhatsAppLink, WHATSAPP_MESSAGES } from '../config'
 import { trackLeadResult } from '../lib/analytics'
@@ -11,22 +13,40 @@ interface ResultScreenProps {
   score: number
 }
 
+const ICON_BY_TIER: Record<LeadTier, typeof Check> = {
+  qualified: Check,
+  toQualify: Clock3,
+  disqualified: Info,
+}
+
 export function ResultScreen({ tier, score }: ResultScreenProps) {
   useEffect(() => {
     trackLeadResult(tier, score)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const Icon = ICON_BY_TIER[tier]
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="flex min-h-dvh flex-col items-center justify-between bg-forest-950 bg-[radial-gradient(circle_at_50%_0%,var(--color-forest-800),var(--color-forest-950)_60%)] px-6 py-12 text-cream"
+      className="relative flex min-h-dvh flex-col items-center justify-between overflow-hidden bg-forest-950 bg-[radial-gradient(circle_at_50%_0%,var(--color-forest-800),var(--color-forest-950)_60%)] px-6 py-12 text-cream"
     >
+      <Grain />
       <Brand variant="dark" size="sm" />
 
-      <div className="flex w-full max-w-sm flex-1 flex-col items-center justify-center gap-6 text-center">
+      <div className="flex w-full max-w-sm flex-1 flex-col items-center justify-center gap-7 text-center">
+        <motion.div
+          initial={{ scale: 0.7, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.15, duration: 0.4, ease: 'easeOut' }}
+          className="flex h-16 w-16 items-center justify-center rounded-full border border-gold/40 bg-gold/[0.06] text-gold shadow-[0_0_0_1px_rgba(217,184,114,0.08),0_20px_40px_-18px_rgba(217,184,114,0.55)]"
+        >
+          <Icon className="h-6 w-6" strokeWidth={1.75} />
+        </motion.div>
+
         <span className="text-[11px] uppercase tracking-[0.25em] text-gold/70">
           Avaliação concluída
         </span>
@@ -57,7 +77,7 @@ export function ResultScreen({ tier, score }: ResultScreenProps) {
             <WhatsAppButton
               href={buildWhatsAppLink(WHATSAPP_MESSAGES.disqualified)}
               label="Falar com a concierge mesmo assim"
-              variant="ghost"
+              variant="outline"
             />
           </>
         )}

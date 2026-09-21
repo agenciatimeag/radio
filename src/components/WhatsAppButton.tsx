@@ -1,22 +1,25 @@
+import { motion } from 'framer-motion'
+import { buttonVariants } from './ui/button'
+import { cn } from '../lib/utils'
+
 interface WhatsAppButtonProps {
   href: string
   label: string
-  variant?: 'primary' | 'ghost'
+  variant?: 'gold' | 'outline'
 }
 
-export function WhatsAppButton({ href, label, variant = 'primary' }: WhatsAppButtonProps) {
-  const base =
-    'inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-sm font-semibold tracking-wide transition-transform active:scale-[0.98]'
-  const styles =
-    variant === 'primary'
-      ? `${base} bg-gold-600 text-forest-950 shadow-[0_8px_24px_-8px_rgba(217,184,114,0.6)]`
-      : `${base} border border-gold/40 text-gold bg-transparent`
-
+export function WhatsAppButton({ href, label, variant = 'gold' }: WhatsAppButtonProps) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className={styles}>
+    <motion.a
+      whileTap={{ scale: 0.97 }}
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={cn(buttonVariants({ variant }))}
+    >
       <WhatsAppIcon />
       {label}
-    </a>
+    </motion.a>
   )
 }
 

@@ -1,7 +1,11 @@
 import { useState } from 'react'
+import * as RadioGroup from '@radix-ui/react-radio-group'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Check, Clock3, MapPin, Stethoscope, Wallet, type LucideIcon } from 'lucide-react'
 import type { Option, Question } from '../data/questions'
 import { ProgressBar } from './ProgressBar'
 import { Brand } from './Brand'
+import { cn } from '../lib/utils'
 
 interface QuestionScreenProps {
   question: Question
@@ -13,8 +17,16 @@ interface QuestionScreenProps {
 
 const LETTERS = ['A', 'B', 'C', 'D']
 
+const ICON_BY_QUESTION: Record<string, LucideIcon> = {
+  investimento: Wallet,
+  localizacao: MapPin,
+  tratamento: Stethoscope,
+  urgencia: Clock3,
+}
+
 export function QuestionScreen({ question, step, total, onAnswer, onBack }: QuestionScreenProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const Icon = ICON_BY_QUESTION[question.id]
 
   function handleSelect(option: Option) {
     if (selectedId) return
@@ -30,9 +42,10 @@ export function QuestionScreen({ question, step, total, onAnswer, onBack }: Ques
           onClick={onBack}
           disabled={!onBack}
           aria-label="Voltar"
-          className={`flex h-9 w-9 items-center justify-center rounded-full border border-forest-900/15 text-forest-900 transition-opacity ${
-            onBack ? 'opacity-100' : 'pointer-events-none opacity-0'
-          }`}
+          className={cn(
+            'flex h-9 w-9 items-center justify-center rounded-full border border-forest-900/15 text-forest-900 transition-opacity',
+            onBack ? 'opacity-100' : 'pointer-events-none opacity-0',
+          )}
         >
           <svg viewBox="0 0 24 24" className="h-4 w-4 fill-none stroke-current stroke-2">
             <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -48,36 +61,62 @@ export function QuestionScreen({ question, step, total, onAnswer, onBack }: Ques
       </div>
 
       <div className="mt-10 flex-1">
+        {Icon && (
+          <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-full border border-forest-900/12 bg-forest-900/[0.04] text-forest-800">
+            <Icon className="h-5 w-5" strokeWidth={1.75} />
+          </div>
+        )}
+
         <h2 className="font-serif text-xl leading-snug text-forest-950">{question.title}</h2>
 
-        <div className="mt-8 flex flex-col gap-3">
+        <RadioGroup.Root
+          value={selectedId ?? undefined}
+          className="mt-8 flex flex-col gap-3"
+        >
           {question.options.map((option, index) => {
             const isSelected = selectedId === option.id
             const isDimmed = selectedId !== null && !isSelected
 
             return (
-              <button
+              <RadioGroup.Item
                 key={option.id}
-                type="button"
+                value={option.id}
                 onClick={() => handleSelect(option)}
-                className={`flex items-center gap-4 rounded-2xl border px-4 py-4 text-left text-[15px] leading-snug transition-all duration-200 ${
+                className={cn(
+                  'flex items-center gap-4 rounded-2xl border px-4 py-4 text-left text-[15px] leading-snug transition-all duration-200',
                   isSelected
-                    ? 'border-gold-600 bg-forest-900 text-cream'
-                    : 'border-forest-900/12 bg-white text-forest-950 active:border-gold-600/60'
-                } ${isDimmed ? 'opacity-40' : 'opacity-100'}`}
+                    ? 'border-gold-600 bg-forest-900 text-cream shadow-[0_16px_32px_-16px_rgba(14,59,51,0.45)]'
+                    : 'border-forest-900/12 bg-white text-forest-950 active:border-gold-600/60',
+                  isDimmed && 'opacity-40',
+                )}
               >
                 <span
-                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
-                    isSelected ? 'bg-gold-600 text-forest-950' : 'bg-forest-900/8 text-forest-800'
-                  }`}
+                  className={cn(
+                    'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition-colors',
+                    isSelected ? 'bg-gold-600 text-forest-950' : 'bg-forest-900/8 text-forest-800',
+                  )}
                 >
-                  {LETTERS[index]}
+                  <AnimatePresence mode="wait" initial={false}>
+                    {isSelected ? (
+                      <motion.span
+                        key="check"
+                        initial={{ scale: 0.4, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.18 }}
+                        className="flex items-center justify-center"
+                      >
+                        <Check className="h-3.5 w-3.5" strokeWidth={3} />
+                      </motion.span>
+                    ) : (
+                      <motion.span key="letter">{LETTERS[index]}</motion.span>
+                    )}
+                  </AnimatePresence>
                 </span>
                 <span>{option.label}</span>
-              </button>
+              </RadioGroup.Item>
             )
           })}
-        </div>
+        </RadioGroup.Root>
       </div>
     </div>
   )

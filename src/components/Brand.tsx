@@ -13,7 +13,9 @@ export function Brand({ variant = 'dark', size = 'sm' }: BrandProps) {
     <div className="flex flex-col items-center gap-3">
       <div
         className={`flex ${monogramSize} items-center justify-center rounded-full border font-serif tracking-wide ${
-          isDark ? 'border-gold/60 text-gold' : 'border-forest-900/30 text-forest-900'
+          isDark
+            ? 'border-gold/60 text-gold shadow-[0_0_0_1px_rgba(217,184,114,0.12),0_0_28px_-6px_rgba(217,184,114,0.45)]'
+            : 'border-forest-900/25 text-forest-900'
         }`}
       >
         GR
