@@ -3,8 +3,7 @@
 export const CLINIC_NAME = 'Instituto Guilherme Rocha'
 export const CLINIC_TAGLINE = 'Medicina Metabólica de Precisão'
 
-// TODO: substituir pelo número real do WhatsApp (formato internacional, só dígitos).
-export const WHATSAPP_NUMBER = '5527999999999'
+export const WHATSAPP_NUMBER = '5527995223099'
 
 export const WHATSAPP_MESSAGES = {
   qualified:
