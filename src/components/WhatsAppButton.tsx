@@ -5,10 +5,10 @@ import { cn } from '../lib/utils'
 interface WhatsAppButtonProps {
   href: string
   label: string
-  variant?: 'gold' | 'outline'
+  variant?: 'accent' | 'outline'
 }
 
-export function WhatsAppButton({ href, label, variant = 'gold' }: WhatsAppButtonProps) {
+export function WhatsAppButton({ href, label, variant = 'accent' }: WhatsAppButtonProps) {
   return (
     <motion.a
       whileTap={{ scale: 0.97 }}

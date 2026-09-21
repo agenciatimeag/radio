@@ -1,41 +1,43 @@
 import { useState } from 'react'
 import * as RadioGroup from '@radix-ui/react-radio-group'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Check, Clock3, MapPin, Stethoscope, Wallet, type LucideIcon } from 'lucide-react'
+import { Check } from 'lucide-react'
 import type { Option, Question } from '../data/questions'
 import { ProgressBar } from './ProgressBar'
 import { Brand } from './Brand'
+import { Button } from './ui/button'
 import { cn } from '../lib/utils'
 
 interface QuestionScreenProps {
   question: Question
   step: number
   total: number
-  onAnswer: (option: Option) => void
+  onAnswer: (option: Option, text?: string) => void
   onBack?: () => void
-}
-
-const LETTERS = ['A', 'B', 'C', 'D']
-
-const ICON_BY_QUESTION: Record<string, LucideIcon> = {
-  investimento: Wallet,
-  localizacao: MapPin,
-  tratamento: Stethoscope,
-  urgencia: Clock3,
 }
 
 export function QuestionScreen({ question, step, total, onAnswer, onBack }: QuestionScreenProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
-  const Icon = ICON_BY_QUESTION[question.id]
+  const [textValue, setTextValue] = useState('')
+
+  const selectedOption = question.options.find((o) => o.id === selectedId)
+  const awaitingText = selectedOption?.requiresText ?? false
 
   function handleSelect(option: Option) {
     if (selectedId) return
     setSelectedId(option.id)
-    window.setTimeout(() => onAnswer(option), 320)
+    if (!option.requiresText) {
+      window.setTimeout(() => onAnswer(option), 320)
+    }
+  }
+
+  function handleTextSubmit() {
+    if (!selectedOption || !textValue.trim()) return
+    onAnswer(selectedOption, textValue.trim())
   }
 
   return (
-    <div className="flex min-h-dvh flex-col bg-cream px-6 py-6 text-ink">
+    <div className="flex min-h-dvh flex-col bg-bg px-6 py-6 text-text">
       <div className="flex items-center gap-4">
         <button
           type="button"
@@ -43,7 +45,7 @@ export function QuestionScreen({ question, step, total, onAnswer, onBack }: Ques
           disabled={!onBack}
           aria-label="Voltar"
           className={cn(
-            'flex h-9 w-9 items-center justify-center rounded-full border border-forest-900/15 text-forest-900 transition-opacity',
+            'flex h-9 w-9 items-center justify-center rounded-full border border-border text-text transition-opacity',
             onBack ? 'opacity-100' : 'pointer-events-none opacity-0',
           )}
         >
@@ -57,23 +59,16 @@ export function QuestionScreen({ question, step, total, onAnswer, onBack }: Ques
       </div>
 
       <div className="mt-6 flex justify-center">
-        <Brand variant="light" size="sm" />
+        <Brand size="sm" />
       </div>
 
       <div className="mt-10 flex-1">
-        {Icon && (
-          <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-full border border-forest-900/12 bg-forest-900/[0.04] text-forest-800">
-            <Icon className="h-5 w-5" strokeWidth={1.75} />
-          </div>
-        )}
+        <h2 className="font-display text-xl font-semibold leading-snug text-text">
+          {question.title}
+        </h2>
 
-        <h2 className="font-serif text-xl leading-snug text-forest-950">{question.title}</h2>
-
-        <RadioGroup.Root
-          value={selectedId ?? undefined}
-          className="mt-8 flex flex-col gap-3"
-        >
-          {question.options.map((option, index) => {
+        <RadioGroup.Root value={selectedId ?? undefined} className="mt-8 flex flex-col gap-3">
+          {question.options.map((option) => {
             const isSelected = selectedId === option.id
             const isDimmed = selectedId !== null && !isSelected
 
@@ -83,32 +78,28 @@ export function QuestionScreen({ question, step, total, onAnswer, onBack }: Ques
                 value={option.id}
                 onClick={() => handleSelect(option)}
                 className={cn(
-                  'flex items-center gap-4 rounded-2xl border px-4 py-4 text-left text-[15px] leading-snug transition-all duration-200',
+                  'flex items-center gap-3.5 rounded-2xl border px-4 py-4 text-left text-[15px] leading-snug transition-all duration-200',
                   isSelected
-                    ? 'border-gold-600 bg-forest-900 text-cream shadow-[0_16px_32px_-16px_rgba(14,59,51,0.45)]'
-                    : 'border-forest-900/12 bg-white text-forest-950 active:border-gold-600/60',
+                    ? 'border-accent bg-accent text-on-accent shadow-[0_0_32px_-10px_rgba(237,233,166,0.55)]'
+                    : 'border-border bg-surface text-text active:border-border-strong',
                   isDimmed && 'opacity-40',
                 )}
               >
                 <span
                   className={cn(
-                    'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition-colors',
-                    isSelected ? 'bg-gold-600 text-forest-950' : 'bg-forest-900/8 text-forest-800',
+                    'flex h-5 w-5 shrink-0 items-center justify-center rounded-[6px] border transition-colors',
+                    isSelected ? 'border-on-accent/30 bg-on-accent/10' : 'border-border-strong',
                   )}
                 >
-                  <AnimatePresence mode="wait" initial={false}>
-                    {isSelected ? (
+                  <AnimatePresence>
+                    {isSelected && (
                       <motion.span
-                        key="check"
                         initial={{ scale: 0.4, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ duration: 0.18 }}
-                        className="flex items-center justify-center"
                       >
                         <Check className="h-3.5 w-3.5" strokeWidth={3} />
                       </motion.span>
-                    ) : (
-                      <motion.span key="letter">{LETTERS[index]}</motion.span>
                     )}
                   </AnimatePresence>
                 </span>
@@ -117,6 +108,37 @@ export function QuestionScreen({ question, step, total, onAnswer, onBack }: Ques
             )
           })}
         </RadioGroup.Root>
+
+        <AnimatePresence>
+          {awaitingText && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mt-4 overflow-hidden"
+            >
+              <textarea
+                id="outros-assuntos"
+                autoFocus
+                value={textValue}
+                onChange={(e) => setTextValue(e.target.value)}
+                placeholder="Conte rapidamente o que você busca"
+                rows={3}
+                className="w-full resize-none rounded-2xl border border-border bg-surface px-4 py-3 text-[15px] text-text placeholder:text-text-muted focus:border-accent focus:outline-none"
+              />
+              <div className="mt-3">
+                <Button
+                  type="button"
+                  size="sm"
+                  disabled={!textValue.trim()}
+                  onClick={handleTextSubmit}
+                >
+                  Continuar
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   )

@@ -11,14 +11,16 @@ type Step = { kind: 'intro' } | { kind: 'question'; index: number } | { kind: 'r
 function App() {
   const [step, setStep] = useState<Step>({ kind: 'intro' })
   const [answers, setAnswers] = useState<Option[]>([])
+  const [detailText, setDetailText] = useState<string | undefined>(undefined)
 
   function handleStart() {
     setStep({ kind: 'question', index: 0 })
   }
 
-  function handleAnswer(index: number, option: Option) {
+  function handleAnswer(index: number, option: Option, text?: string) {
     const next = [...answers.slice(0, index), option]
     setAnswers(next)
+    if (text) setDetailText(text)
 
     if (index + 1 < questions.length) {
       setStep({ kind: 'question', index: index + 1 })
@@ -53,7 +55,7 @@ function App() {
             question={questions[step.index]}
             step={step.index + 1}
             total={questions.length}
-            onAnswer={(option) => handleAnswer(step.index, option)}
+            onAnswer={(option, text) => handleAnswer(step.index, option, text)}
             onBack={() => handleBack(step.index)}
           />
         </motion.div>
@@ -61,7 +63,7 @@ function App() {
 
       {step.kind === 'result' && result && (
         <motion.div key="result" exit={{ opacity: 0 }}>
-          <ResultScreen tier={result.tier} score={result.score} />
+          <ResultScreen tier={result.tier} score={result.score} detail={detailText} />
         </motion.div>
       )}
     </AnimatePresence>

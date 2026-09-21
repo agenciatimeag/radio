@@ -1,19 +1,21 @@
 @import 'tailwindcss';
 
 @theme {
-  --font-serif: 'Fraunces', 'Georgia', serif;
+  --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
   --font-sans: 'Inter', system-ui, sans-serif;
 
-  --color-ink: #12241f;
-  --color-forest-950: #0a241e;
-  --color-forest-900: #0e3b33;
-  --color-forest-800: #144a40;
-  --color-forest-700: #1c5c4f;
-  --color-forest-600: #257263;
-  --color-cream: #faf7f1;
-  --color-cream-100: #f3ede0;
-  --color-gold: #d9b872;
-  --color-gold-600: #c1a05a;
+  /* Modo escuro puro — sem verde. Base neutra quase-preta + glow claro como acento. */
+  --color-bg: #0a0a0b;
+  --color-surface: #131316;
+  --color-surface-active: #1c1c20;
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-strong: rgba(255, 255, 255, 0.2);
+  --color-text: #f5f4f0;
+  --color-text-muted: rgba(245, 244, 240, 0.6);
+
+  --color-accent: #ede9a6;
+  --color-accent-600: #ddd884;
+  --color-on-accent: #14140b;
   --color-clay: #b3543f;
 }
 
@@ -24,8 +26,8 @@ html {
 body {
   margin: 0;
   min-height: 100dvh;
-  background: var(--color-cream);
-  color: var(--color-ink);
+  background: var(--color-bg);
+  color: var(--color-text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }

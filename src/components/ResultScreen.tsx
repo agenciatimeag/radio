@@ -11,6 +11,7 @@ import type { LeadTier } from '../lib/scoring'
 interface ResultScreenProps {
   tier: LeadTier
   score: number
+  detail?: string
 }
 
 const ICON_BY_TIER: Record<LeadTier, typeof Check> = {
@@ -19,7 +20,7 @@ const ICON_BY_TIER: Record<LeadTier, typeof Check> = {
   disqualified: Info,
 }
 
-export function ResultScreen({ tier, score }: ResultScreenProps) {
+export function ResultScreen({ tier, score, detail }: ResultScreenProps) {
   useEffect(() => {
     trackLeadResult(tier, score)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -32,22 +33,22 @@ export function ResultScreen({ tier, score }: ResultScreenProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="relative flex min-h-dvh flex-col items-center justify-between overflow-hidden bg-forest-950 bg-[radial-gradient(circle_at_50%_0%,var(--color-forest-800),var(--color-forest-950)_60%)] px-6 py-12 text-cream"
+      className="relative flex min-h-dvh flex-col items-center justify-between overflow-hidden bg-bg bg-[radial-gradient(circle_at_50%_0%,var(--color-surface),var(--color-bg)_60%)] px-6 py-12 text-text"
     >
       <Grain />
-      <Brand variant="dark" size="sm" />
+      <Brand size="sm" />
 
       <div className="flex w-full max-w-sm flex-1 flex-col items-center justify-center gap-7 text-center">
         <motion.div
           initial={{ scale: 0.7, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.15, duration: 0.4, ease: 'easeOut' }}
-          className="flex h-16 w-16 items-center justify-center rounded-full border border-gold/40 bg-gold/[0.06] text-gold shadow-[0_0_0_1px_rgba(217,184,114,0.08),0_20px_40px_-18px_rgba(217,184,114,0.55)]"
+          className="flex h-16 w-16 items-center justify-center rounded-full border border-accent/40 bg-accent/[0.08] text-accent shadow-[0_0_0_1px_rgba(237,233,166,0.1),0_20px_40px_-18px_rgba(237,233,166,0.55)]"
         >
           <Icon className="h-6 w-6" strokeWidth={1.75} />
         </motion.div>
 
-        <span className="text-[11px] uppercase tracking-[0.25em] text-gold/70">
+        <span className="text-[11px] uppercase tracking-[0.25em] text-accent/80">
           Avaliação concluída
         </span>
 
@@ -59,23 +60,23 @@ export function ResultScreen({ tier, score }: ResultScreenProps) {
       <div className="w-full max-w-sm space-y-3">
         {tier === 'qualified' && (
           <WhatsAppButton
-            href={buildWhatsAppLink(WHATSAPP_MESSAGES.qualified)}
+            href={buildWhatsAppLink(WHATSAPP_MESSAGES.qualified, detail)}
             label="Agendar minha consulta no WhatsApp"
           />
         )}
         {tier === 'toQualify' && (
           <WhatsAppButton
-            href={buildWhatsAppLink(WHATSAPP_MESSAGES.toQualify)}
+            href={buildWhatsAppLink(WHATSAPP_MESSAGES.toQualify, detail)}
             label="Falar no WhatsApp"
           />
         )}
         {tier === 'disqualified' && (
           <>
-            <p className="text-center text-xs leading-relaxed text-cream/50">
+            <p className="text-center text-xs leading-relaxed text-text-muted">
               Mesmo assim, quero falar com a concierge
             </p>
             <WhatsAppButton
-              href={buildWhatsAppLink(WHATSAPP_MESSAGES.disqualified)}
+              href={buildWhatsAppLink(WHATSAPP_MESSAGES.disqualified, detail)}
               label="Falar com a concierge mesmo assim"
               variant="outline"
             />
@@ -89,10 +90,10 @@ export function ResultScreen({ tier, score }: ResultScreenProps) {
 function QualifiedContent() {
   return (
     <>
-      <h1 className="font-serif text-[26px] leading-snug text-cream">
+      <h1 className="font-display text-[26px] font-semibold leading-snug text-text">
         Você tem o perfil ideal para o nosso programa
       </h1>
-      <p className="text-sm leading-relaxed text-cream/70">
+      <p className="text-sm leading-relaxed text-text-muted">
         Pelo que você compartilhou, o acompanhamento do Dr. Guilherme Rocha faz muito sentido para
         o seu momento. O próximo passo é conversar com a nossa concierge para agendar sua
         consulta.
@@ -104,10 +105,10 @@ function QualifiedContent() {
 function ToQualifyContent() {
   return (
     <>
-      <h1 className="font-serif text-[26px] leading-snug text-cream">
+      <h1 className="font-display text-[26px] font-semibold leading-snug text-text">
         Vamos conversar sobre o seu caso
       </h1>
-      <p className="text-sm leading-relaxed text-cream/70">
+      <p className="text-sm leading-relaxed text-text-muted">
         Nossa concierge vai te ajudar a entender os próximos passos.
       </p>
     </>
@@ -117,24 +118,24 @@ function ToQualifyContent() {
 function DisqualifiedContent() {
   return (
     <>
-      <h1 className="font-serif text-[26px] leading-snug text-cream">
+      <h1 className="font-display text-[26px] font-semibold leading-snug text-text">
         Ainda não é o momento ideal
       </h1>
-      <p className="text-sm leading-relaxed text-cream/70">
+      <p className="text-sm leading-relaxed text-text-muted">
         Pelo que você compartilhou, seu perfil ainda não compõe o que buscamos atender hoje.
         Alguns pontos importantes sobre o nosso trabalho:
       </p>
-      <ul className="w-full space-y-2 text-left text-sm leading-relaxed text-cream/70">
+      <ul className="w-full space-y-2 text-left text-sm leading-relaxed text-text-muted">
         <li className="flex gap-2">
-          <span className="text-gold">•</span>
+          <span className="text-accent">•</span>
           Nossos tratamentos partem de um investimento a partir de R$ 7.000.
         </li>
         <li className="flex gap-2">
-          <span className="text-gold">•</span>
+          <span className="text-accent">•</span>
           Nossa clínica atende exclusivamente de forma presencial, na cidade de Guarapari/ES.
         </li>
         <li className="flex gap-2">
-          <span className="text-gold">•</span>
+          <span className="text-accent">•</span>
           Não trabalhamos com outros tipos de tratamento além dos nossos protocolos de medicina
           metabólica.
         </li>
