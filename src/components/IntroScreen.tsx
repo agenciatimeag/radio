@@ -20,7 +20,7 @@ export function IntroScreen({ onStart }: IntroScreenProps) {
 
       <HeroPhoto size="lg" />
 
-      <div className="relative -mt-10 flex flex-1 flex-col items-center justify-between px-6 pb-10 text-center">
+      <div className="relative -mt-10 flex flex-1 flex-col items-center justify-center gap-8 px-6 pb-10 text-center">
         <div className="flex flex-col items-center gap-4">
           <div>
             <h1 className="font-display text-[26px] font-semibold leading-tight text-text">
@@ -31,7 +31,7 @@ export function IntroScreen({ onStart }: IntroScreenProps) {
             </p>
           </div>
           <p className="mx-auto max-w-[300px] text-sm leading-relaxed text-text-muted">
-            Para ser direcionado ao setor correto, você vai responder 4 perguntas rápidas.
+            Clique no botão abaixo para ser direcionado ao setor correto.
           </p>
         </div>
 
