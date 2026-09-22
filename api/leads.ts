@@ -5,6 +5,7 @@ import { computeResult } from '../src/lib/scoring.js'
 import type { Option } from '../src/data/questions.js'
 import type { SubmitLeadRequest, SubmitLeadResponse } from '../src/lib/leadPayload.js'
 import { sendMetaEvent } from './_lib/meta-capi.js'
+import { recordEvent } from './_lib/db.js'
 
 function parseCookies(header: string | undefined): Record<string, string> {
   const out: Record<string, string> = {}
@@ -71,6 +72,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     utm_term: body.attribution?.utm_term,
     fbclid: body.attribution?.fbclid,
   }
+
+  // Sempre grava no banco (dashboard interno) — independente da regra abaixo,
+  // que só manda sinal positivo pro Meta.
+  await recordEvent({
+    type: 'form_submitted',
+    leadId,
+    tier,
+    score,
+    utmSource: body.attribution?.utm_source,
+    utmMedium: body.attribution?.utm_medium,
+    utmCampaign: body.attribution?.utm_campaign,
+    utmContent: body.attribution?.utm_content,
+    utmTerm: body.attribution?.utm_term,
+    fbclid: body.attribution?.fbclid,
+  })
 
   // Só lead qualificado gera sinal pro Meta — desqualificado não dispara
   // nenhum evento, pra não poluir a otimização da campanha com dado negativo.

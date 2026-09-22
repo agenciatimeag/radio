@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { sendMetaEvent } from './_lib/meta-capi.js'
+import { recordEvent } from './_lib/db.js'
 
 interface WhatsAppClickRequest {
   leadId: string
@@ -7,6 +8,12 @@ interface WhatsAppClickRequest {
   eventSourceUrl: string
   fbp?: string
   fbc?: string
+  utm_source?: string
+  utm_medium?: string
+  utm_campaign?: string
+  utm_content?: string
+  utm_term?: string
+  fbclid?: string
 }
 
 function parseCookies(header: string | undefined): Record<string, string> {
@@ -30,6 +37,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.status(400).json({ error: 'missing_lead_id' })
     return
   }
+
+  // Sempre grava no banco (dashboard interno), qualificado ou não.
+  await recordEvent({
+    type: 'whatsapp_click',
+    leadId: body.leadId,
+    tier: body.qualified ? 'qualified' : 'disqualified',
+    utmSource: body.utm_source,
+    utmMedium: body.utm_medium,
+    utmCampaign: body.utm_campaign,
+    utmContent: body.utm_content,
+    utmTerm: body.utm_term,
+    fbclid: body.fbclid,
+  })
 
   // Mesma regra do envio do formulário: só lead qualificado gera evento pro Meta.
   if (body.qualified) {

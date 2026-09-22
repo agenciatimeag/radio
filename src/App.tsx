@@ -4,7 +4,7 @@ import { questions, type Option } from './data/questions'
 import { computeResult } from './lib/scoring'
 import { captureAttribution } from './lib/attribution'
 import { initMetaPixel } from './lib/metaPixel'
-import { submitLead } from './lib/leadsApi'
+import { submitLead, trackPageView } from './lib/leadsApi'
 import { IntroScreen } from './components/IntroScreen'
 import { QuestionScreen } from './components/QuestionScreen'
 import { ResultScreen } from './components/ResultScreen'
@@ -24,6 +24,7 @@ function App() {
   useEffect(() => {
     captureAttribution()
     initMetaPixel()
+    trackPageView()
   }, [])
 
   function handleStart() {

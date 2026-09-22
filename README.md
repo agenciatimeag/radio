@@ -83,9 +83,8 @@ sessão daquela aba, então é fácil ficar com um valor desatualizado (o evento
 é aceito pela Meta normalmente, só não aparece ali). Por isso a variável foi
 deixada vazia em produção.
 
-Ainda não há banco de dados próprio (decisão consciente pra ir ao ar mais
-rápido) — os leads ficam registrados no Meta e na conversa do WhatsApp; um
-banco pode ser adicionado depois se fizer sentido (ex: dashboard de leads).
+Além do Meta, os eventos também são gravados num banco Postgres próprio —
+ver seção "Dashboard de leads" abaixo.
 
 ## Perguntas e qualificação
 
@@ -100,6 +99,36 @@ Sem nenhum desses dois marcados, o lead é **qualificado automaticamente**.
 As perguntas de tratamento e urgência continuam sendo coletadas (e podem
 compor o `score` informativo, guardado mas não usado pra decidir a tela) —
 elas dão contexto pra concierge, mas não afetam mais qualificação.
+
+## Dashboard de leads
+
+Rota `/dashboard` (sem senha — link direto), mostrando:
+
+- Aberturas do formulário, leads, leads qualificados, taxa de qualificação,
+  pontuação média, cliques no WhatsApp.
+- Dois funis lado a lado — "lead qualificado" e "lead desqualificado" —
+  cada um com as etapas: abriu o formulário → completou → qualificado ou
+  desqualificado → clicou no WhatsApp.
+- Top 5 campanhas do mês (por `utm_campaign`), pelo número de leads.
+
+### Banco de dados
+
+Usa Postgres (integração Neon da Vercel). Precisa ser criado uma vez pelo
+painel — **Vercel → Storage → Create Database → Postgres** — e conectado ao
+projeto; isso injeta `DATABASE_URL` (ou `POSTGRES_URL`) automaticamente nas
+variáveis de ambiente, sem precisar configurar nada a mais.
+
+Sem o banco conectado, o formulário e o WhatsApp continuam funcionando
+normalmente (a gravação falha silenciosamente, só com um aviso no log) — só
+o `/dashboard` fica sem dados até o Postgres ser configurado.
+
+O schema (uma única tabela `events`) é criado automaticamente na primeira
+gravação — não precisa rodar migration manual. Ver `api/_lib/db.ts`.
+
+Cada envio do formulário e cada clique no WhatsApp grava um evento no banco
+**independente da regra de só mandar sinal positivo pro Meta** — o dashboard
+interno precisa ver os dois lados (qualificado e desqualificado) pra montar
+os funis; só o envio pro Meta continua sendo exclusivo de lead qualificado.
 
 ## Telas de resultado
 
