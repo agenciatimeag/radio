@@ -1,10 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'node:crypto'
-import { questions } from '../src/data/questions'
-import { computeResult } from '../src/lib/scoring'
-import type { Option } from '../src/data/questions'
-import type { SubmitLeadRequest, SubmitLeadResponse } from '../src/lib/leadPayload'
-import { sendMetaEvent } from './_lib/meta-capi'
+import { questions } from '../src/data/questions.js'
+import { computeResult } from '../src/lib/scoring.js'
+import type { Option } from '../src/data/questions.js'
+import type { SubmitLeadRequest, SubmitLeadResponse } from '../src/lib/leadPayload.js'
+import { sendMetaEvent } from './_lib/meta-capi.js'
 
 function parseCookies(header: string | undefined): Record<string, string> {
   const out: Record<string, string> = {}

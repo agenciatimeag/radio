@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { sendMetaEvent } from './_lib/meta-capi'
+import { sendMetaEvent } from './_lib/meta-capi.js'
 
 interface WhatsAppClickRequest {
   leadId: string
