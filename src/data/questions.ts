@@ -73,16 +73,10 @@ export const questions: Question[] = [
   {
     id: 'investimento',
     title:
-      'Após a consulta inicial, de R$ 650, você estaria disposto a investir no tratamento indicado pelo Dr. Guilherme?',
+      'Após a consulta inicial (R$ 650), caso o Dr. Guilherme identifique um protocolo de tratamento individual pra você, você estaria disposto a investir de R$ 7.000 a R$ 15.000?',
     options: [
-      { id: 'ate-2k', label: 'Até R$ 2.000', points: 0, disqualifies: true },
-      { id: '2k-7k', label: 'De R$ 2.000 a R$ 7.000', points: 15 },
-      { id: '7k-15k', label: 'De R$ 7.000 a R$ 15.000', points: 28 },
-      {
-        id: 'sem-limite',
-        label: 'Não me importo com o valor, pois busco resultado',
-        points: 35,
-      },
+      { id: 'sim', label: 'Sim', points: 35 },
+      { id: 'nao', label: 'Não', points: 0, disqualifies: true },
     ],
   },
 ]
