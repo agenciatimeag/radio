@@ -40,21 +40,22 @@ Configurar em: Vercel → Project Settings → Environment Variables.
 
 | Evento | Quando | Onde |
 |---|---|---|
-| `PageView` | Ao abrir o formulário | Pixel (navegador) |
-| `FormSubmitted` | Ao terminar as 4 perguntas | `api/leads.ts` (Conversions API) |
-| `QualifiedLead` | Lead qualificado (ver regra abaixo) | `api/leads.ts` (Conversions API) |
-| `DisqualifiedLead` | Lead desqualificado | `api/leads.ts` (Conversions API) |
-| `WhatsAppClick` | Clique no botão de WhatsApp | `api/whatsapp-click.ts` (Conversions API) |
+| `PageView` | Ao abrir o formulário | Pixel (navegador) — sempre dispara |
+| `FormSubmitted` | Ao terminar as 4 perguntas, **só se qualificado** | `api/leads.ts` (Conversions API) |
+| `QualifiedLead` | Lead qualificado | `api/leads.ts` (Conversions API) |
+| `WhatsAppClick` | Clique no botão de WhatsApp, **só se qualificado** | `api/whatsapp-click.ts` (Conversions API) |
+
+Só lead qualificado gera dado pro Meta — decisão do cliente pra manter o
+sinal de otimização puramente positivo. Um lead desqualificado completa o
+formulário e pode até falar com a concierge normalmente, mas nenhum evento
+sai pro Meta nesse caso (nem `FormSubmitted`, nem `WhatsAppClick`); ele só
+fica registrado no WhatsApp/no seu processo interno.
 
 A pontuação é **recalculada no servidor** a partir dos dados canônicos de
 `src/data/questions.ts` — o backend nunca confia nas respostas vindas do
-cliente. `FormSubmitted`/`QualifiedLead`/`DisqualifiedLead` disparam na hora
-do envio (`POST /api/leads`), não quando a página de agradecimento
-carrega/atualiza — então um refresh na tela de resultado não gera evento
-duplicado.
-
-A tela mostrada e o evento enviado pro Meta são sempre a mesma coisa (não
-existe mais uma faixa intermediária que diverge entre os dois).
+cliente. Os eventos disparam na hora do envio (`POST /api/leads`), não
+quando a página de agradecimento carrega/atualiza — então um refresh na
+tela de resultado não gera evento duplicado.
 
 UTMs e `fbclid` são capturados da URL de entrada (uma vez por sessão, via
 `src/lib/attribution.ts`); `_fbp`/`_fbc` são lidos direto dos cookies do
@@ -66,13 +67,13 @@ Com `META_TEST_EVENT_CODE` configurado, no Gerenciador de Eventos → Testar
 Eventos:
 
 1. Abrir o formulário → aparece `PageView`.
-2. Responder de forma a ser desqualificado → aparecem `FormSubmitted` +
-   `DisqualifiedLead` (nunca `QualifiedLead`).
+2. Responder de forma a ser desqualificado → **nenhum** evento novo aparece
+   (nem `FormSubmitted`, nem `WhatsAppClick` ao clicar no botão).
 3. Responder de forma a ser qualificado → aparecem `FormSubmitted` +
-   `QualifiedLead` (nunca `DisqualifiedLead`).
-4. Clicar no WhatsApp → aparece `WhatsAppClick`.
+   `QualifiedLead`.
+4. Clicar no WhatsApp nesse caso qualificado → aparece `WhatsAppClick`.
 5. Atualizar a página de agradecimento → **não** deve gerar novo
-   `QualifiedLead`/`DisqualifiedLead`.
+   `QualifiedLead`.
 
 Ainda não há banco de dados próprio (decisão consciente pra ir ao ar mais
 rápido) — os leads ficam registrados no Meta e na conversa do WhatsApp; um
