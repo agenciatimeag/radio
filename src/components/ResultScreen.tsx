@@ -1,17 +1,16 @@
-import { useEffect } from 'react'
-import { motion } from 'framer-motion'
 import { Check, Clock3, Info } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { Brand } from './Brand'
 import { Grain } from './Grain'
 import { WhatsAppButton } from './WhatsAppButton'
 import { buildWhatsAppLink, WHATSAPP_MESSAGES } from '../config'
-import { trackLeadResult } from '../lib/analytics'
 import type { LeadTier } from '../lib/scoring'
 
 interface ResultScreenProps {
   tier: LeadTier
   score: number
   detail?: string
+  leadId?: string
 }
 
 const ICON_BY_TIER: Record<LeadTier, typeof Check> = {
@@ -20,12 +19,7 @@ const ICON_BY_TIER: Record<LeadTier, typeof Check> = {
   disqualified: Info,
 }
 
-export function ResultScreen({ tier, score, detail }: ResultScreenProps) {
-  useEffect(() => {
-    trackLeadResult(tier, score)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
+export function ResultScreen({ tier, detail, leadId }: ResultScreenProps) {
   const Icon = ICON_BY_TIER[tier]
 
   return (
@@ -62,12 +56,14 @@ export function ResultScreen({ tier, score, detail }: ResultScreenProps) {
           <WhatsAppButton
             href={buildWhatsAppLink(WHATSAPP_MESSAGES.qualified, detail)}
             label="Agendar minha consulta no WhatsApp"
+            leadId={leadId}
           />
         )}
         {tier === 'toQualify' && (
           <WhatsAppButton
             href={buildWhatsAppLink(WHATSAPP_MESSAGES.toQualify, detail)}
             label="Falar no WhatsApp"
+            leadId={leadId}
           />
         )}
         {tier === 'disqualified' && (
@@ -79,6 +75,7 @@ export function ResultScreen({ tier, score, detail }: ResultScreenProps) {
               href={buildWhatsAppLink(WHATSAPP_MESSAGES.disqualified, detail)}
               label="Falar com a concierge mesmo assim"
               variant="outline"
+              leadId={leadId}
             />
           </>
         )}

@@ -1,20 +1,25 @@
 import { motion } from 'framer-motion'
 import { buttonVariants } from './ui/button'
 import { cn } from '../lib/utils'
+import { notifyWhatsAppClick } from '../lib/leadsApi'
 
 interface WhatsAppButtonProps {
   href: string
   label: string
   variant?: 'accent' | 'outline'
+  leadId?: string
 }
 
-export function WhatsAppButton({ href, label, variant = 'accent' }: WhatsAppButtonProps) {
+export function WhatsAppButton({ href, label, variant = 'accent', leadId }: WhatsAppButtonProps) {
   return (
     <motion.a
       whileTap={{ scale: 0.97 }}
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={() => {
+        if (leadId) notifyWhatsAppClick(leadId)
+      }}
       className={cn(buttonVariants({ variant }))}
     >
       <WhatsAppIcon />

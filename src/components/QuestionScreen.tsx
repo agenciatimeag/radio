@@ -17,7 +17,7 @@ interface QuestionScreenProps {
 }
 
 export function QuestionScreen({ question, step, total, onAnswer, onBack }: QuestionScreenProps) {
-  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [selectedId, setSelectedId] = useState('')
   const [textValue, setTextValue] = useState('')
 
   const selectedOption = question.options.find((o) => o.id === selectedId)
@@ -67,7 +67,7 @@ export function QuestionScreen({ question, step, total, onAnswer, onBack }: Ques
           {question.title}
         </h2>
 
-        <RadioGroup.Root value={selectedId ?? undefined} className="mt-8 flex flex-col gap-3">
+        <RadioGroup.Root value={selectedId} className="mt-8 flex flex-col gap-3">
           {question.options.map((option) => {
             const isSelected = selectedId === option.id
             const isDimmed = selectedId !== null && !isSelected
