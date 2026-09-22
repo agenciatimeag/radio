@@ -1,7 +1,7 @@
 import { Check, Clock3, Info } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { Brand } from './Brand'
 import { Grain } from './Grain'
+import { HeroPhoto } from './HeroPhoto'
 import { WhatsAppButton } from './WhatsAppButton'
 import { buildWhatsAppLink, WHATSAPP_MESSAGES } from '../config'
 import type { LeadTier } from '../lib/scoring'
@@ -27,12 +27,13 @@ export function ResultScreen({ tier, detail, leadId }: ResultScreenProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="relative flex min-h-dvh flex-col items-center justify-between overflow-hidden bg-bg bg-[radial-gradient(circle_at_50%_0%,var(--color-surface),var(--color-bg)_60%)] px-6 py-12 text-text"
+      className="relative flex min-h-dvh flex-col overflow-hidden bg-bg text-text"
     >
       <Grain />
-      <Brand size="sm" />
 
-      <div className="flex w-full max-w-sm flex-1 flex-col items-center justify-center gap-7 text-center">
+      <HeroPhoto size="md" />
+
+      <div className="relative -mt-10 flex flex-1 flex-col items-center justify-center gap-7 px-6 pb-10 text-center">
         <motion.div
           initial={{ scale: 0.7, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -42,43 +43,45 @@ export function ResultScreen({ tier, detail, leadId }: ResultScreenProps) {
           <Icon className="h-6 w-6" strokeWidth={1.75} />
         </motion.div>
 
-        <span className="text-[11px] uppercase tracking-[0.25em] text-accent/80">
-          Avaliação concluída
-        </span>
+        <div className="flex w-full max-w-sm flex-col items-center gap-3">
+          <span className="text-[11px] uppercase tracking-[0.25em] text-accent/80">
+            Avaliação concluída
+          </span>
 
-        {tier === 'qualified' && <QualifiedContent />}
-        {tier === 'toQualify' && <ToQualifyContent />}
-        {tier === 'disqualified' && <DisqualifiedContent />}
-      </div>
+          {tier === 'qualified' && <QualifiedContent />}
+          {tier === 'toQualify' && <ToQualifyContent />}
+          {tier === 'disqualified' && <DisqualifiedContent />}
+        </div>
 
-      <div className="w-full max-w-sm space-y-3">
-        {tier === 'qualified' && (
-          <WhatsAppButton
-            href={buildWhatsAppLink(WHATSAPP_MESSAGES.qualified, detail)}
-            label="Agendar minha consulta no WhatsApp"
-            leadId={leadId}
-          />
-        )}
-        {tier === 'toQualify' && (
-          <WhatsAppButton
-            href={buildWhatsAppLink(WHATSAPP_MESSAGES.toQualify, detail)}
-            label="Falar no WhatsApp"
-            leadId={leadId}
-          />
-        )}
-        {tier === 'disqualified' && (
-          <>
-            <p className="text-center text-xs leading-relaxed text-text-muted">
-              Mesmo assim, quero falar com a concierge
-            </p>
+        <div className="w-full max-w-sm space-y-3">
+          {tier === 'qualified' && (
             <WhatsAppButton
-              href={buildWhatsAppLink(WHATSAPP_MESSAGES.disqualified, detail)}
-              label="Falar com a concierge mesmo assim"
-              variant="outline"
+              href={buildWhatsAppLink(WHATSAPP_MESSAGES.qualified, detail)}
+              label="Agendar minha consulta no WhatsApp"
               leadId={leadId}
             />
-          </>
-        )}
+          )}
+          {tier === 'toQualify' && (
+            <WhatsAppButton
+              href={buildWhatsAppLink(WHATSAPP_MESSAGES.toQualify, detail)}
+              label="Falar no WhatsApp"
+              leadId={leadId}
+            />
+          )}
+          {tier === 'disqualified' && (
+            <>
+              <p className="text-center text-xs leading-relaxed text-text-muted">
+                Mesmo assim, quero falar com a concierge
+              </p>
+              <WhatsAppButton
+                href={buildWhatsAppLink(WHATSAPP_MESSAGES.disqualified, detail)}
+                label="Falar com a concierge mesmo assim"
+                variant="outline"
+                leadId={leadId}
+              />
+            </>
+          )}
+        </div>
       </div>
     </motion.div>
   )

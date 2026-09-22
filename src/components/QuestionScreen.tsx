@@ -70,7 +70,7 @@ export function QuestionScreen({ question, step, total, onAnswer, onBack }: Ques
         <RadioGroup.Root value={selectedId} className="mt-8 flex flex-col gap-3">
           {question.options.map((option) => {
             const isSelected = selectedId === option.id
-            const isDimmed = selectedId !== null && !isSelected
+            const isDimmed = selectedId !== '' && !isSelected
 
             return (
               <RadioGroup.Item
@@ -103,7 +103,7 @@ export function QuestionScreen({ question, step, total, onAnswer, onBack }: Ques
                     )}
                   </AnimatePresence>
                 </span>
-                <span>{option.label}</span>
+                <span className="font-medium">{option.label}</span>
               </RadioGroup.Item>
             )
           })}

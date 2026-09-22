@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion'
-import { Brand } from './Brand'
 import { Grain } from './Grain'
+import { HeroPhoto } from './HeroPhoto'
 import { Button } from './ui/button'
-import { CLINIC_NAME, CLINIC_TAGLINE, HERO_PHOTO_URL } from '../config'
+import { CLINIC_NAME, CLINIC_TAGLINE } from '../config'
 
 interface IntroScreenProps {
   onStart: () => void
@@ -18,23 +18,7 @@ export function IntroScreen({ onStart }: IntroScreenProps) {
     >
       <Grain />
 
-      <div
-        className={`relative w-full shrink-0 overflow-hidden ${HERO_PHOTO_URL ? 'h-[46vh] min-h-[280px]' : 'h-[26vh] min-h-[180px]'}`}
-      >
-        {HERO_PHOTO_URL ? (
-          <img
-            src={HERO_PHOTO_URL}
-            alt="Dr. Guilherme Rocha"
-            className="h-full w-full object-cover object-top grayscale-[15%]"
-          />
-        ) : (
-          <div className="h-full w-full bg-[radial-gradient(circle_at_50%_35%,var(--color-surface-active),var(--color-bg)_75%)]" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-bg/40 to-bg" />
-        <div className="absolute inset-x-0 top-0 flex justify-center pt-[calc(env(safe-area-inset-top,0px)+20px)]">
-          <Brand size="sm" />
-        </div>
-      </div>
+      <HeroPhoto size="lg" />
 
       <div className="relative -mt-10 flex flex-1 flex-col items-center justify-between px-6 pb-10 text-center">
         <div className="flex flex-col items-center gap-4">
