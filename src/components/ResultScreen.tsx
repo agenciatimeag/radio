@@ -71,11 +71,12 @@ export function ResultScreen({ tier, detail, leadId }: ResultScreenProps) {
           {tier === 'disqualified' && (
             <>
               <p className="text-center text-xs leading-relaxed text-text-muted">
-                Mesmo assim, quero falar com a concierge
+                Se ainda assim você deseja entender melhor o seu caso e conversar com nossa
+                equipe, nossa concierge pode te orientar.
               </p>
               <WhatsAppButton
                 href={buildWhatsAppLink(WHATSAPP_MESSAGES.disqualified, detail)}
-                label="Falar com a concierge mesmo assim"
+                label="Quero falar com a concierge"
                 variant="outline"
                 leadId={leadId}
               />
@@ -122,22 +123,22 @@ function DisqualifiedContent() {
         Ainda não é o momento ideal
       </h1>
       <p className="text-sm leading-relaxed text-text-muted">
-        Pelo que você compartilhou, seu perfil ainda não compõe o que buscamos atender hoje.
-        Alguns pontos importantes sobre o nosso trabalho:
+        Pelas suas respostas, pode ainda não ser o momento ideal para um tratamento desse nível.
       </p>
+      <p className="text-sm leading-relaxed text-text-muted">Antes de seguir, é importante considerar que:</p>
       <ul className="w-full space-y-2 text-left text-sm leading-relaxed text-text-muted">
         <li className="flex gap-2">
           <span className="text-accent">•</span>
-          Nossos tratamentos partem de um investimento a partir de R$ 4.000.
+          Nossos tratamentos partem de um investimento de R$ 4.000.
         </li>
         <li className="flex gap-2">
           <span className="text-accent">•</span>
-          Nossa clínica atende exclusivamente de forma presencial, na cidade de Guarapari/ES.
+          O atendimento é realizado exclusivamente de forma presencial, em Guarapari/ES.
         </li>
         <li className="flex gap-2">
           <span className="text-accent">•</span>
-          Não trabalhamos com outros tipos de tratamento além dos nossos protocolos de medicina
-          metabólica.
+          Nossa atuação é voltada aos protocolos 100% personalizados de medicina metabólica
+          oferecidos pelo Instituto.
         </li>
       </ul>
     </>
