@@ -5,9 +5,7 @@ export const CLINIC_TAGLINE = 'Medicina Metabólica de Precisão'
 
 export const WHATSAPP_NUMBER = '5527995223099'
 
-// TODO: colar aqui a foto do Dr. Guilherme (ex: '/hero-guilherme.jpg', em public/).
-// Sem foto, a tela inicial usa um fundo escuro com glow no lugar.
-export const HERO_PHOTO_URL = ''
+export const HERO_PHOTO_URL = '/hero-guilherme.jpg'
 
 export const WHATSAPP_MESSAGES = {
   qualified:
