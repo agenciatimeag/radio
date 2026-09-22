@@ -75,12 +75,12 @@ export const questions: Question[] = [
   {
     id: 'investimento',
     title:
-      'Após a consulta inicial, caso o Dr. Guilherme identifique um protocolo de tratamento individual pra você, estaria disposto a investir a partir de R$ 5.000 para alcançar os resultados que busca?',
+      'Após a consulta inicial, caso o Dr. Guilherme identifique um protocolo de tratamento individual pra você, estaria disposto a investir a partir de R$ 4.000 para alcançar os resultados que busca?',
     options: [
       { id: 'sim', label: 'Sim, estou disposto(a)', points: 35 },
       { id: 'nao', label: 'Não, esse valor é muito alto para mim', points: 0, disqualifies: true },
     ],
-    note: 'Lembrando que os protocolos são construídos individualmente, de acordo com a necessidade de cada pessoa — considerando todo o histórico de vida, objetivos e tratamento. Os valores podem variar de R$ 5.000 a R$ 15.000.',
+    note: 'Lembrando que os protocolos são construídos individualmente, de acordo com a necessidade de cada pessoa — considerando todo o histórico de vida, objetivos e tratamento. Os valores podem variar de R$ 4.000 a R$ 15.000.',
   },
 ]
 

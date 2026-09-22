@@ -125,7 +125,7 @@ function DisqualifiedContent() {
       <ul className="w-full space-y-2 text-left text-sm leading-relaxed text-text-muted">
         <li className="flex gap-2">
           <span className="text-accent">•</span>
-          Nossos tratamentos partem de um investimento a partir de R$ 5.000.
+          Nossos tratamentos partem de um investimento a partir de R$ 4.000.
         </li>
         <li className="flex gap-2">
           <span className="text-accent">•</span>
