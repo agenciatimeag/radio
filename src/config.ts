@@ -10,8 +10,6 @@ export const HERO_PHOTO_URL = 'hero-guilherme.jpg'
 export const WHATSAPP_MESSAGES = {
   qualified:
     'Olá! Preenchi o formulário do Instituto Guilherme Rocha e gostaria de agendar minha consulta.',
-  toQualify:
-    'Olá! Preenchi o formulário do Instituto Guilherme Rocha e gostaria de conversar sobre uma consulta.',
   disqualified:
     'Olá! Vi que talvez meu perfil não seja o ideal no momento, mas gostaria de falar com a concierge mesmo assim.',
 } as const

@@ -1,4 +1,4 @@
-import { Check, Clock3, Info } from 'lucide-react'
+import { Check, Info } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Grain } from './Grain'
 import { HeroPhoto } from './HeroPhoto'
@@ -15,7 +15,6 @@ interface ResultScreenProps {
 
 const ICON_BY_TIER: Record<LeadTier, typeof Check> = {
   qualified: Check,
-  toQualify: Clock3,
   disqualified: Info,
 }
 
@@ -49,7 +48,6 @@ export function ResultScreen({ tier, detail, leadId }: ResultScreenProps) {
           </span>
 
           {tier === 'qualified' && <QualifiedContent />}
-          {tier === 'toQualify' && <ToQualifyContent />}
           {tier === 'disqualified' && <DisqualifiedContent />}
         </div>
 
@@ -58,13 +56,6 @@ export function ResultScreen({ tier, detail, leadId }: ResultScreenProps) {
             <WhatsAppButton
               href={buildWhatsAppLink(WHATSAPP_MESSAGES.qualified, detail)}
               label="Agendar minha consulta no WhatsApp"
-              leadId={leadId}
-            />
-          )}
-          {tier === 'toQualify' && (
-            <WhatsAppButton
-              href={buildWhatsAppLink(WHATSAPP_MESSAGES.toQualify, detail)}
-              label="Falar no WhatsApp"
               leadId={leadId}
             />
           )}
@@ -98,19 +89,6 @@ function QualifiedContent() {
         Pelo que você compartilhou, o acompanhamento do Dr. Guilherme Rocha faz muito sentido para
         o seu momento. O próximo passo é conversar com a nossa concierge para agendar sua
         consulta.
-      </p>
-    </>
-  )
-}
-
-function ToQualifyContent() {
-  return (
-    <>
-      <h1 className="font-display text-[26px] font-semibold leading-snug text-text">
-        Vamos conversar sobre o seu caso
-      </h1>
-      <p className="text-sm leading-relaxed text-text-muted">
-        Nossa concierge vai te ajudar a entender os próximos passos.
       </p>
     </>
   )

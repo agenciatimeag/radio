@@ -6,11 +6,6 @@ import type { Option } from '../src/data/questions'
 import type { SubmitLeadRequest, SubmitLeadResponse } from '../src/lib/leadPayload'
 import { sendMetaEvent } from './_lib/meta-capi'
 
-// Limiar de qualificação pro sinal que vai pro Meta — decidido no documento de
-// integração (score >= 70). Pode divergir das faixas exibidas na UI do
-// formulário (que tem 3 níveis), essa aqui é só o corte binário pro anúncio.
-const META_QUALIFIED_THRESHOLD = 70
-
 function parseCookies(header: string | undefined): Record<string, string> {
   const out: Record<string, string> = {}
   if (!header) return out
@@ -55,7 +50,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const leadId = randomUUID()
   const { score, tier } = computeResult(resolvedOptions)
-  const metaQualified = tier !== 'disqualified' && score >= META_QUALIFIED_THRESHOLD
 
   const cookies = parseCookies(req.headers.cookie)
   const userData = {
@@ -87,7 +81,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   })
 
   await sendMetaEvent({
-    eventName: metaQualified ? 'QualifiedLead' : 'DisqualifiedLead',
+    eventName: tier === 'qualified' ? 'QualifiedLead' : 'DisqualifiedLead',
     eventId: `${leadId}_lead`,
     eventSourceUrl,
     userData,
