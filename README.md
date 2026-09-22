@@ -104,12 +104,15 @@ elas dão contexto pra concierge, mas não afetam mais qualificação.
 
 Rota `/dashboard` (sem senha — link direto), mostrando:
 
+- Filtro de período no topo (ontem, 7/15/30/90 dias, ou intervalo
+  personalizado) — escopa todos os números abaixo, pra não virar uma
+  contagem infinita desde o início do projeto.
 - Aberturas do formulário, leads, leads qualificados, taxa de qualificação,
-  pontuação média, cliques no WhatsApp.
-- Dois funis lado a lado — "lead qualificado" e "lead desqualificado" —
-  cada um com as etapas: abriu o formulário → completou → qualificado ou
-  desqualificado → clicou no WhatsApp.
-- Top 5 campanhas do mês (por `utm_campaign`), pelo número de leads.
+  pontuação média, cliques no WhatsApp — todos já filtrados pelo período.
+- Um único funil com tronco compartilhado (abriu o formulário → completou)
+  que se ramifica em qualificado/desqualificado e depois no clique do
+  WhatsApp de cada lado.
+- Top 5 campanhas no período (por `utm_campaign`), pelo número de leads.
 
 ### Banco de dados
 

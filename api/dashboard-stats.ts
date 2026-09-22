@@ -1,12 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { sql, ensureSchema } from './_lib/db.js'
 
-interface FunnelStage {
-  label: string
-  value: number
-}
-
 interface DashboardStats {
+  from: string
+  to: string
   pageViews: number
   leads: number
   qualifiedLeads: number
@@ -15,11 +12,13 @@ interface DashboardStats {
   whatsappClicks: number
   whatsappClicksQualified: number
   whatsappClicksDisqualified: number
-  funnels: {
-    qualified: FunnelStage[]
-    disqualified: FunnelStage[]
-  }
   topCampaigns: { campaign: string; leads: number }[]
+}
+
+function parseDateParam(value: unknown): Date | null {
+  if (typeof value !== 'string') return null
+  const date = new Date(value)
+  return Number.isNaN(date.getTime()) ? null : date
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -34,6 +33,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
   const db = sql
 
+  const now = new Date()
+  const defaultFrom = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+  const from = parseDateParam(req.query.from) ?? defaultFrom
+  const to = parseDateParam(req.query.to) ?? now
+
   await ensureSchema()
 
   const rows = await db`
@@ -47,6 +51,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       count(*) FILTER (WHERE type = 'whatsapp_click' AND tier = 'qualified') AS whatsapp_clicks_qualified,
       count(*) FILTER (WHERE type = 'whatsapp_click' AND tier = 'disqualified') AS whatsapp_clicks_disqualified
     FROM events
+    WHERE created_at >= ${from.toISOString()} AND created_at <= ${to.toISOString()}
   `
   const totals = rows[0] as Record<string, string | number | null>
 
@@ -55,7 +60,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     FROM events
     WHERE type = 'form_submitted'
       AND utm_campaign IS NOT NULL
-      AND created_at >= date_trunc('month', now())
+      AND created_at >= ${from.toISOString()} AND created_at <= ${to.toISOString()}
     GROUP BY utm_campaign
     ORDER BY count(*) DESC
     LIMIT 5
@@ -69,6 +74,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const whatsappClicksDisqualified = Number(totals.whatsapp_clicks_disqualified)
 
   const stats: DashboardStats = {
+    from: from.toISOString(),
+    to: to.toISOString(),
     pageViews,
     leads,
     qualifiedLeads,
@@ -77,20 +84,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     whatsappClicks: Number(totals.whatsapp_clicks),
     whatsappClicksQualified,
     whatsappClicksDisqualified,
-    funnels: {
-      qualified: [
-        { label: 'Abriu o formulário', value: pageViews },
-        { label: 'Completou o formulário', value: leads },
-        { label: 'Qualificado', value: qualifiedLeads },
-        { label: 'Clicou no WhatsApp', value: whatsappClicksQualified },
-      ],
-      disqualified: [
-        { label: 'Abriu o formulário', value: pageViews },
-        { label: 'Completou o formulário', value: leads },
-        { label: 'Desqualificado', value: disqualifiedLeads },
-        { label: 'Clicou no WhatsApp', value: whatsappClicksDisqualified },
-      ],
-    },
     topCampaigns: campaignRows.map((row) => ({
       campaign: row.utm_campaign as string,
       leads: Number(row.leads),
