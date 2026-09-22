@@ -10,6 +10,8 @@ export const buttonVariants = cva(
       variant: {
         accent:
           'bg-accent text-on-accent shadow-[0_1px_0_0_rgba(255,255,255,0.5)_inset,0_0_40px_-6px_rgba(237,233,166,0.45)]',
+        whatsapp:
+          'bg-[#25D366] text-white shadow-[0_1px_0_0_rgba(255,255,255,0.4)_inset,0_0_40px_-6px_rgba(37,211,102,0.6)]',
         outline: 'border border-border-strong bg-white/[0.02] text-text backdrop-blur-sm',
       },
       size: {

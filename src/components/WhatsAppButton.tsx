@@ -6,7 +6,7 @@ import { notifyWhatsAppClick } from '../lib/leadsApi'
 interface WhatsAppButtonProps {
   href: string
   label: string
-  variant?: 'accent' | 'outline'
+  variant?: 'accent' | 'outline' | 'whatsapp'
   leadId?: string
   qualified?: boolean
 }

@@ -55,7 +55,8 @@ export function ResultScreen({ tier, detail, leadId }: ResultScreenProps) {
           {tier === 'qualified' && (
             <WhatsAppButton
               href={buildWhatsAppLink(WHATSAPP_MESSAGES.qualified, detail)}
-              label="Agendar minha consulta no WhatsApp"
+              label="Falar com concierge"
+              variant="whatsapp"
               leadId={leadId}
               qualified
             />
