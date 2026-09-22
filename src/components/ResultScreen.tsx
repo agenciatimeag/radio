@@ -57,6 +57,7 @@ export function ResultScreen({ tier, detail, leadId }: ResultScreenProps) {
               href={buildWhatsAppLink(WHATSAPP_MESSAGES.qualified, detail)}
               label="Agendar minha consulta no WhatsApp"
               leadId={leadId}
+              qualified
             />
           )}
           {tier === 'disqualified' && (

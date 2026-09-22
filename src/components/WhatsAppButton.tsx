@@ -8,9 +8,16 @@ interface WhatsAppButtonProps {
   label: string
   variant?: 'accent' | 'outline'
   leadId?: string
+  qualified?: boolean
 }
 
-export function WhatsAppButton({ href, label, variant = 'accent', leadId }: WhatsAppButtonProps) {
+export function WhatsAppButton({
+  href,
+  label,
+  variant = 'accent',
+  leadId,
+  qualified = false,
+}: WhatsAppButtonProps) {
   return (
     <motion.a
       whileTap={{ scale: 0.97 }}
@@ -18,7 +25,7 @@ export function WhatsAppButton({ href, label, variant = 'accent', leadId }: What
       target="_blank"
       rel="noopener noreferrer"
       onClick={() => {
-        if (leadId) notifyWhatsAppClick(leadId)
+        if (leadId) notifyWhatsAppClick(leadId, qualified)
       }}
       className={cn(buttonVariants({ variant }))}
     >

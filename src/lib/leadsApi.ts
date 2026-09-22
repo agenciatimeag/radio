@@ -25,9 +25,10 @@ export async function submitLead(
 
 // sendBeacon não bloqueia a navegação para o WhatsApp — importante porque o
 // clique precisa abrir o WhatsApp imediatamente, sem esperar a rede.
-export function notifyWhatsAppClick(leadId: string): void {
+export function notifyWhatsAppClick(leadId: string, qualified: boolean): void {
   const payload = JSON.stringify({
     leadId,
+    qualified,
     eventSourceUrl: window.location.href,
     ...getAttribution(),
   })

@@ -3,6 +3,7 @@ import { sendMetaEvent } from './_lib/meta-capi'
 
 interface WhatsAppClickRequest {
   leadId: string
+  qualified: boolean
   eventSourceUrl: string
   fbp?: string
   fbc?: string
@@ -30,21 +31,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return
   }
 
-  const cookies = parseCookies(req.headers.cookie)
+  // Mesma regra do envio do formulário: só lead qualificado gera evento pro Meta.
+  if (body.qualified) {
+    const cookies = parseCookies(req.headers.cookie)
 
-  await sendMetaEvent({
-    eventName: 'WhatsAppClick',
-    eventId: `${body.leadId}_whatsapp`,
-    eventSourceUrl: body.eventSourceUrl || req.headers.referer || '',
-    userData: {
-      clientIpAddress: (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim(),
-      clientUserAgent: req.headers['user-agent'],
-      fbp: body.fbp ?? cookies['_fbp'],
-      fbc: body.fbc ?? cookies['_fbc'],
-      externalId: body.leadId,
-    },
-    customData: { lead_id: body.leadId },
-  })
+    await sendMetaEvent({
+      eventName: 'WhatsAppClick',
+      eventId: `${body.leadId}_whatsapp`,
+      eventSourceUrl: body.eventSourceUrl || req.headers.referer || '',
+      userData: {
+        clientIpAddress: (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim(),
+        clientUserAgent: req.headers['user-agent'],
+        fbp: body.fbp ?? cookies['_fbp'],
+        fbc: body.fbc ?? cookies['_fbc'],
+        externalId: body.leadId,
+      },
+      customData: { lead_id: body.leadId },
+    })
+  }
 
   res.status(200).json({ ok: true })
 }

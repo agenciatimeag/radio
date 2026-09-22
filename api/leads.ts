@@ -72,21 +72,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     fbclid: body.attribution?.fbclid,
   }
 
-  await sendMetaEvent({
-    eventName: 'FormSubmitted',
-    eventId: `${leadId}_form`,
-    eventSourceUrl,
-    userData,
-    customData,
-  })
+  // Só lead qualificado gera sinal pro Meta — desqualificado não dispara
+  // nenhum evento, pra não poluir a otimização da campanha com dado negativo.
+  if (tier === 'qualified') {
+    await sendMetaEvent({
+      eventName: 'FormSubmitted',
+      eventId: `${leadId}_form`,
+      eventSourceUrl,
+      userData,
+      customData,
+    })
 
-  await sendMetaEvent({
-    eventName: tier === 'qualified' ? 'QualifiedLead' : 'DisqualifiedLead',
-    eventId: `${leadId}_lead`,
-    eventSourceUrl,
-    userData,
-    customData,
-  })
+    await sendMetaEvent({
+      eventName: 'QualifiedLead',
+      eventId: `${leadId}_lead`,
+      eventSourceUrl,
+      userData,
+      customData,
+    })
+  }
 
   const response: SubmitLeadResponse = { leadId, score }
   res.status(200).json(response)
