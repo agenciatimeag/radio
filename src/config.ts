@@ -5,7 +5,7 @@ export const CLINIC_TAGLINE = 'Medicina Metabólica de Precisão'
 
 export const WHATSAPP_NUMBER = '5527995223099'
 
-export const HERO_PHOTO_URL = '/hero-guilherme.jpg'
+export const HERO_PHOTO_URL = 'hero-guilherme.jpg'
 
 export const WHATSAPP_MESSAGES = {
   qualified:

@@ -12,7 +12,7 @@ export function Brand({ size = 'sm' }: BrandProps) {
       <div
         className={`flex ${monogramSize} items-center justify-center overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(237,233,166,0.08),0_0_28px_-8px_rgba(237,233,166,0.5)]`}
       >
-        <img src="/logo-mark.png" alt="G.Rocha" className="h-full w-full object-cover" />
+        <img src="logo-mark.png" alt="G.Rocha" className="h-full w-full object-cover" />
       </div>
       {size === 'lg' && (
         <div className="text-center">
