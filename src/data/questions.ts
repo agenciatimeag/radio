@@ -12,6 +12,8 @@ export interface Question {
   id: string
   title: string
   options: Option[]
+  /** Texto pequeno exibido abaixo das opções, para contexto/ressalva. */
+  note?: string
 }
 
 // Pontuação pensada para somar no máximo 100 pontos no total.
@@ -78,6 +80,7 @@ export const questions: Question[] = [
       { id: 'sim', label: 'Sim, estou disposto(a)', points: 35 },
       { id: 'nao', label: 'Não, esse valor é muito alto para mim', points: 0, disqualifies: true },
     ],
+    note: 'Lembrando que os protocolos são construídos individualmente, de acordo com a necessidade de cada pessoa — considerando todo o histórico de vida, objetivos e tratamento. Os valores podem variar de R$ 5.000 a R$ 15.000.',
   },
 ]
 

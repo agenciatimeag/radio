@@ -109,6 +109,10 @@ export function QuestionScreen({ question, step, total, onAnswer, onBack }: Ques
           })}
         </RadioGroup.Root>
 
+        {question.note && (
+          <p className="mt-4 text-xs leading-relaxed text-text-muted">{question.note}</p>
+        )}
+
         <AnimatePresence>
           {awaitingText && (
             <motion.div
