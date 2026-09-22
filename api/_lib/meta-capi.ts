@@ -76,9 +76,5 @@ export async function sendMetaEvent(input: SendMetaEventInput): Promise<void> {
 
   if (!response.ok) {
     console.error(`[meta-capi] Falha ao enviar ${eventName}: ${response.status} ${responseBody}`)
-  } else {
-    // Log temporário pra depuração — a Meta pode responder 200 mesmo quando
-    // o evento não é aceito de verdade (ex: test_event_code desatualizado).
-    console.info(`[meta-capi] ${eventName} aceito pela Meta: ${responseBody}`)
   }
 }

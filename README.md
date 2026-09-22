@@ -32,7 +32,7 @@ no bundle do navegador. Variáveis de ambiente (ver `.env.example`):
 | `VITE_META_PIXEL_ID` | Frontend (público) | Carrega o Pixel no navegador, gera os cookies `_fbp`/`_fbc` |
 | `META_DATASET_ID` | Backend (secreto) | Pixel/Dataset ID usado pela Conversions API |
 | `META_CAPI_ACCESS_TOKEN` | Backend (secreto) | Token da Conversions API |
-| `META_TEST_EVENT_CODE` | Backend (secreto) | Só durante os testes no Gerenciador de Eventos; remover depois |
+| `META_TEST_EVENT_CODE` | Backend (secreto), opcional | Só se precisar depurar na aba "Testar Eventos"; deixar vazio em produção |
 
 Configurar em: Vercel → Project Settings → Environment Variables.
 
@@ -63,8 +63,9 @@ Pixel no servidor.
 
 ### Testando (Etapa 12 do documento de integração)
 
-Com `META_TEST_EVENT_CODE` configurado, no Gerenciador de Eventos → Testar
-Eventos:
+Em produção (sem `META_TEST_EVENT_CODE`), os eventos aparecem no Gerenciador
+de Eventos → **Visão Geral** (não na aba "Testar Eventos", que só mostra
+eventos marcados com um código de teste válido no momento do envio):
 
 1. Abrir o formulário → aparece `PageView`.
 2. Responder de forma a ser desqualificado → **nenhum** evento novo aparece
@@ -74,6 +75,13 @@ Eventos:
 4. Clicar no WhatsApp nesse caso qualificado → aparece `WhatsAppClick`.
 5. Atualizar a página de agradecimento → **não** deve gerar novo
    `QualifiedLead`.
+
+Pode levar alguns minutos pra aparecer na Visão Geral. Pra depurar na hora,
+é possível configurar `META_TEST_EVENT_CODE` temporariamente com o código
+mostrado na aba "Testar Eventos" — mas esse código expira/muda a cada nova
+sessão daquela aba, então é fácil ficar com um valor desatualizado (o evento
+é aceito pela Meta normalmente, só não aparece ali). Por isso a variável foi
+deixada vazia em produção.
 
 Ainda não há banco de dados próprio (decisão consciente pra ir ao ar mais
 rápido) — os leads ficam registrados no Meta e na conversa do WhatsApp; um
