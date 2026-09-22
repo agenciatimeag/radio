@@ -137,10 +137,15 @@ os funis; só o envio pro Meta continua sendo exclusivo de lead qualificado.
 
 Ver `src/components/ResultScreen.tsx`.
 
-- **Qualificado**: tela dizendo que o perfil é apto + botão de WhatsApp.
+- **Qualificado**: tela dizendo que o perfil é apto, e depois de 1,5s
+  **redireciona automaticamente pro WhatsApp** (`window.location.href`) —
+  o botão continua visível como atalho/fallback, caso o navegador bloqueie o
+  redirecionamento automático. O evento de clique no WhatsApp é registrado
+  nesse momento, mesmo sem clique manual.
 - **Desqualificado**: explica os 3 motivos (ticket mínimo, atendimento
   presencial em Guarapari, escopo de tratamentos) e oferece um botão
-  secundário para falar com a concierge mesmo assim.
+  secundário para falar com a concierge mesmo assim — sem redirecionamento
+  automático.
 
 ## Deploy
 

@@ -1,10 +1,14 @@
+import { useEffect, useRef } from 'react'
 import { Check, Info } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Grain } from './Grain'
 import { HeroPhoto } from './HeroPhoto'
 import { WhatsAppButton } from './WhatsAppButton'
 import { buildWhatsAppLink, WHATSAPP_MESSAGES } from '../config'
+import { notifyWhatsAppClick } from '../lib/leadsApi'
 import type { LeadTier } from '../lib/scoring'
+
+const QUALIFIED_REDIRECT_DELAY_MS = 1500
 
 interface ResultScreenProps {
   tier: LeadTier
@@ -20,6 +24,24 @@ const ICON_BY_TIER: Record<LeadTier, typeof Check> = {
 
 export function ResultScreen({ tier, detail, leadId }: ResultScreenProps) {
   const Icon = ICON_BY_TIER[tier]
+  const redirectedRef = useRef(false)
+
+  // Lead qualificado é direcionado direto pro WhatsApp, sem precisar clicar —
+  // o botão continua visível como atalho/fallback caso o redirecionamento
+  // automático seja bloqueado pelo navegador.
+  useEffect(() => {
+    if (tier !== 'qualified' || !leadId) return
+
+    const href = buildWhatsAppLink(WHATSAPP_MESSAGES.qualified, detail)
+    const timer = setTimeout(() => {
+      if (redirectedRef.current) return
+      redirectedRef.current = true
+      notifyWhatsAppClick(leadId, true)
+      window.location.href = href
+    }, QUALIFIED_REDIRECT_DELAY_MS)
+
+    return () => clearTimeout(timer)
+  }, [tier, leadId, detail])
 
   return (
     <motion.div
@@ -53,13 +75,18 @@ export function ResultScreen({ tier, detail, leadId }: ResultScreenProps) {
 
         <div className="w-full max-w-sm space-y-3">
           {tier === 'qualified' && (
-            <WhatsAppButton
-              href={buildWhatsAppLink(WHATSAPP_MESSAGES.qualified, detail)}
-              label="Falar com concierge"
-              variant="whatsapp"
-              leadId={leadId}
-              qualified
-            />
+            <>
+              <p className="text-center text-xs text-text-muted">
+                Você será direcionado automaticamente para o WhatsApp em instantes.
+              </p>
+              <WhatsAppButton
+                href={buildWhatsAppLink(WHATSAPP_MESSAGES.qualified, detail)}
+                label="Falar com concierge"
+                variant="whatsapp"
+                leadId={leadId}
+                qualified
+              />
+            </>
           )}
           {tier === 'disqualified' && (
             <>
