@@ -5,14 +5,14 @@ interface BrandProps {
 }
 
 export function Brand({ size = 'sm' }: BrandProps) {
-  const monogramSize = size === 'lg' ? 'h-16 w-16 text-xl' : 'h-10 w-10 text-sm'
+  const monogramSize = size === 'lg' ? 'h-16 w-16' : 'h-10 w-10'
 
   return (
     <div className="flex flex-col items-center gap-3">
       <div
-        className={`flex ${monogramSize} items-center justify-center rounded-full border border-border-strong font-display font-semibold tracking-wide text-accent shadow-[0_0_0_1px_rgba(237,233,166,0.08),0_0_28px_-8px_rgba(237,233,166,0.5)]`}
+        className={`flex ${monogramSize} items-center justify-center overflow-hidden rounded-2xl shadow-[0_0_0_1px_rgba(237,233,166,0.08),0_0_28px_-8px_rgba(237,233,166,0.5)]`}
       >
-        GR
+        <img src="/logo-mark.png" alt="G.Rocha" className="h-full w-full object-cover" />
       </div>
       {size === 'lg' && (
         <div className="text-center">
